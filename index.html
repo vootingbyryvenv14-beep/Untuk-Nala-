@@ -1,0 +1,173 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#24152f"><title>Untuk Nala — A Little Universe</title><link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500;1,700&family=Caveat:wght@500;700&family=Outfit:wght@400;500;600&display=swap">
+</head><body>
+<div class="backdrop" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i></div>
+<canvas id="bg" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<button id="music" class="music" type="button" aria-pressed="false" aria-label="Putar musik"><span class="bars"><i></i><i></i><i></i><i></i></span></button>
+
+<main class="app">
+
+  <!-- 1. Amplop -->
+  <section class="screen" id="s-intro" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0" id="today">Sebuah surat</p>
+      <h1 class="display rise" style="--i:1">Untuk Nala</h1>
+      <div class="rise env-wrap" style="--i:2">
+        <button class="env" id="env" type="button" aria-label="Buka surat untuk Nala">
+          <span class="env-back"></span>
+          <span class="letter"><span class="hand">Untuk Nala</span><small>dari Yoga</small></span>
+          <span class="pocket"></span>
+          <span class="flap"></span>
+          <span class="seal"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+        </button>
+      </div>
+      <p class="hand rise" style="--i:3" id="envHint">ketuk amplopnya</p>
+    </div>
+  </section>
+
+  <!-- 2. Pesan -->
+  <section class="screen" id="s-hello" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Sebuah pesan</p>
+      <div class="panel msg rise" style="--i:1">
+        <div id="typed" class="typed"></div>
+        <p class="hand sign">— Yoga</p>
+      </div>
+      <div class="row rise" style="--i:2"><button class="btn btn-soft" id="helloBtn" type="button">Lewati</button></div>
+    </div>
+  </section>
+
+  <!-- 3. Alasan -->
+  <section class="screen" id="s-reasons" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Sebagian yang aku simpan</p>
+      <div class="panel rcard rise" style="--i:1" id="rcard" aria-live="polite">
+        <span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+        <h2 id="rt"></h2>
+        <p id="rd"></p>
+      </div>
+      <div class="dots rise" style="--i:2" id="dots" aria-hidden="true"></div>
+      <div class="row rise" style="--i:3">
+        <button class="btn btn-ghost" id="rprev" type="button">Sebelumnya</button>
+        <button class="btn btn-soft" id="rnext" type="button">Berikutnya</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Pertanyaan -->
+  <section class="screen" id="s-ask" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Satu pertanyaan</p>
+      <h2 class="display big" id="askTitle" aria-label="Nala, maukah kamu jadi pacarku?"></h2>
+      <p class="hand rise" style="--i:5">— Yoga</p>
+      <div class="choices rise" style="--i:6">
+        <button class="btn btn-yes" id="yes" type="button">Terima</button>
+        <div class="row">
+          <button class="btn btn-maybe" id="maybe" type="button">Mungkin akan kupikirkan kembali</button>
+          <button class="btn btn-ghost" id="no" type="button">Tolak</button>
+        </div>
+      </div>
+      <p class="note rise" style="--i:7">Jawab sesuai kata hatimu. Aku siap menerima jawaban apa pun.</p>
+    </div>
+  </section>
+
+  <!-- 5a. Terima -->
+  <section class="screen" id="s-yes" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <svg class="bigheart rise" style="--i:0" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <div class="gift-stage rise" style="--i:1">
+        <button class="gift" id="giftBox" type="button" aria-label="Buka kotak kejutan" aria-expanded="false">
+          <span class="gift-glow"></span><span class="gift-surprise" aria-hidden="true">✦<b>♡</b>✦</span>
+          <span class="gift-lid"><i class="gift-bow"></i></span>
+          <span class="gift-body"><i class="gift-ribbon"></i></span>
+          <span class="gift-shadow"></span>
+        </button>
+        <p class="gift-hint" id="giftHint">Ada satu kejutan kecil untukmu · ketuk kotaknya</p>
+      </div>
+      <h2 class="display big rise" style="--i:1">Yeay! Terima kasih, Nala.</h2>
+      <div class="panel msg rise" style="--i:2">
+        <div id="yesTyped" class="typed" style="min-height:9em"></div>
+        <p class="hand sign">— Yoga</p>
+      </div>
+      <div class="panel stats rise" style="--i:3">
+        <p class="eyebrow">Kita resmi sejak</p>
+        <p class="since" id="since"></p>
+        <p class="timer" id="timer">0 hari 00:00:00</p>
+        <div class="meter">
+          <span>Kadar bahagia Yoga</span>
+          <div class="bar"><i id="meterFill"></i></div>
+          <b id="meterVal">0%</b>
+        </div>
+      </div>
+      <p class="note rise" style="--i:4">Tekan salin, lalu kirim ke Yoga ya. Atau cukup screenshot layar ini.</p>
+      <div class="row rise" style="--i:5">
+        <button class="btn btn-yes" id="copyYes" type="button" style="font-size:1rem;padding:16px 28px">Salin jawabanku</button>
+        <button class="btn btn-ghost" id="restart1" type="button">Ulangi dari awal</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5b. Tolak: alasan -->
+  <section class="screen" id="s-no" data-mood="calm" data-bg="petals">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Tidak apa-apa</p>
+      <h2 class="display rise" style="--i:1">Boleh aku tahu alasannya?</h2>
+      <p class="note rise" style="--i:2">Jujur saja. Aku akan membacanya dengan hati terbuka.</p>
+      <div class="chips rise" style="--i:3" id="chips"></div>
+      <div class="rise" style="--i:4">
+        <textarea id="reasonText" maxlength="300" placeholder="Atau tulis dengan kata-katamu sendiri..." aria-label="Alasan"></textarea>
+        <p class="count"><span id="cnt">0</span>/300</p>
+      </div>
+      <div class="row rise" style="--i:5">
+        <button class="btn btn-ghost" id="noBack" type="button">Kembali</button>
+        <button class="btn btn-soft" id="noSend" type="button" disabled>Kirim alasan</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5c. Tolak: maaf -->
+  <section class="screen" id="s-sorry" data-mood="calm" data-bg="petals">
+    <div class="inner">
+      <h2 class="display rise" style="--i:0">Maaf kalau aku sudah mengganggu.</h2>
+      <blockquote class="quote rise" style="--i:1"><b>Alasanmu</b><span id="quoteText"></span></blockquote>
+      <div class="panel msg rise" style="--i:2">
+        <div id="sorryTyped" class="typed" style="min-height:10em"></div>
+        <p class="hand sign">— Yoga</p>
+      </div>
+      <div class="row rise" style="--i:3">
+        <button class="btn btn-soft" id="copyNo" type="button">Salin alasanku</button>
+        <button class="btn btn-ghost" id="changeAns" type="button">Ubah jawabanku</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5d. Mungkin -->
+  <section class="screen" id="s-wait" data-mood="wait" data-bg="fireflies">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Tidak perlu terburu-buru</p>
+      <h2 class="display rise" style="--i:1">Tentu. Ambil waktumu, Nala.</h2>
+      <p class="note rise" style="--i:2">Perasaan tidak harus dijawab hari ini. Kira-kira kapan kamu bisa memberi tahu aku?</p>
+      <div class="chips rise" style="--i:3" id="waitChips"></div>
+      <div class="panel stats rise" id="waitInfo" style="--i:4">
+        <p class="eyebrow">Aku tunggu sampai</p>
+        <p class="since" id="waitDate"></p>
+        <p class="timer" id="waitTimer">0 hari 00:00:00</p>
+        <button class="btn btn-soft" id="copyWait" type="button">Salin pesanku</button>
+      </div>
+      <div class="row rise" style="--i:5">
+        <button class="btn btn-ghost" id="waitBack" type="button">Aku sudah punya jawabannya</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<textarea class="fallback" id="fallback" readonly hidden aria-label="Teks untuk disalin"></textarea>
+
+<script src="script.js" defer></script>
+
+</body></html>
