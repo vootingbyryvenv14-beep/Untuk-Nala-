@@ -1,0 +1,865 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Untuk Nala</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500;1,700&family=Caveat:wght@500;700&family=Outfit:wght@400;500;600&display=swap">
+<style>
+/* Layout: satu layar penuh per tahap (amplop, pesan, alasan, pertanyaan, jawaban).
+   Konten di tengah, partikel hati/kelopak/kunang-kunang di belakang, warna latar berubah mengikuti suasana. */
+@property --o1 { syntax: '<color>'; inherits: true; initial-value: #ff5d83; }
+@property --o2 { syntax: '<color>'; inherits: true; initial-value: #ffb36b; }
+@property --o3 { syntax: '<color>'; inherits: true; initial-value: #b58cff; }
+
+:root {
+  color-scheme: dark;
+  --bg: #240c20;
+  --bg2: #44143a;
+  --panel: rgba(255, 232, 238, 0.08);
+  --panel-line: rgba(255, 200, 215, 0.2);
+  --ink: #fff1ee;
+  --ink-soft: #e9c4cd;
+  --rose: #ff5d83;
+  --coral: #ff8a6b;
+  --blush: #ffc9d4;
+  --gold: #ffd08a;
+  --lilac: #c9a6ff;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-hand: "Caveat", "Segoe Script", cursive;
+  --font-body: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 16px/1.6 var(--font-body);
+  overflow: hidden;
+  --o1: #ff5d83; --o2: #ffb36b; --o3: #b58cff;
+  transition: --o1 1.4s, --o2 1.4s, --o3 1.4s;
+}
+body[data-mood="calm"] { --o1: #7b73ff; --o2: #d98ab0; --o3: #4fa3c7; }
+body[data-mood="wait"] { --o1: #ffb347; --o2: #d1607a; --o3: #8f6bff; }
+
+.backdrop { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: linear-gradient(160deg, var(--bg2), var(--bg) 62%); }
+.orb { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; opacity: 0.38; animation: drift 24s ease-in-out infinite alternate; }
+.o1 { left: -25vmax; top: -30vmax; background: radial-gradient(closest-side, var(--o1), transparent); }
+.o2 { right: -30vmax; top: 10vmax; background: radial-gradient(closest-side, var(--o2), transparent); animation-duration: 30s; animation-delay: -8s; opacity: 0.26; }
+.o3 { left: 0; bottom: -40vmax; background: radial-gradient(closest-side, var(--o3), transparent); animation-duration: 36s; animation-delay: -15s; opacity: 0.28; }
+@keyframes drift { to { transform: translate(8vmax, 6vmax) scale(1.12); } }
+
+canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#bg { z-index: 1; }
+#fx { z-index: 20; }
+
+.app { position: relative; z-index: 2; height: 100%; }
+.screen {
+  position: absolute; inset: 0; display: flex;
+  overflow-y: auto; overflow-x: hidden;
+  padding-top: 68px; padding-bottom: 36px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translateY(18px) scale(0.985); filter: blur(10px);
+  transition: opacity .6s, transform .7s cubic-bezier(.2,.8,.2,1), filter .6s, visibility 0s .7s;
+}
+.screen.active { opacity: 1; visibility: visible; pointer-events: auto; transform: none; filter: none; transition-delay: 0s; }
+.inner { margin: auto; width: 100%; max-width: 560px; display: grid; gap: 20px; justify-items: center; text-align: center; min-width: 0; }
+
+.rise { width: 100%; display: grid; justify-items: center; gap: 14px; }
+.screen.active .rise { animation: rise .85s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 110ms + 150ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+.w { display: inline-block; }
+.screen.active .w { animation: wordIn .9s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--w, 0) * 150ms + 250ms); }
+@keyframes wordIn { from { opacity: 0; transform: translateY(.6em) rotate(4deg); filter: blur(8px); } }
+
+.eyebrow { margin: 0; font: 500 .78rem/1.2 var(--font-body); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+.display { margin: 0; font: italic 700 clamp(2.5rem, 9vw, 4.2rem)/1.04 var(--font-display); text-wrap: balance; color: var(--ink); }
+.display.big { font-size: clamp(2.7rem, 10vw, 4.8rem); }
+.hand { margin: 0; font: 700 1.6rem/1.2 var(--font-hand); color: var(--blush); }
+.note { margin: 0; color: var(--ink-soft); font-size: .92rem; max-width: 34ch; text-wrap: balance; }
+
+.panel { width: 100%; background: var(--panel); border: 1px solid var(--panel-line); border-radius: 24px; padding: 26px 24px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 20px 50px -24px rgba(0,0,0,.6); }
+.msg { text-align: left; }
+.typed { min-height: 11.5em; font: 500 1.28rem/1.55 var(--font-display); color: var(--ink); }
+.typed p { margin: 0 0 .7em; }
+.caret { display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: -.15em; background: var(--rose); animation: blink .9s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.sign { text-align: right; margin-top: 6px; }
+
+.btn { font: 600 1rem/1 var(--font-body); border: 0; border-radius: 999px; padding: 16px 28px; min-height: 52px; cursor: pointer; color: var(--ink); position: relative; -webkit-tap-highlight-color: transparent; transition: scale .25s cubic-bezier(.2,.9,.3,1.4), box-shadow .25s, background .25s, border-color .25s, opacity .25s; }
+.btn:hover { scale: 1.04; }
+.btn:active { scale: .96; }
+.btn:disabled { opacity: .4; cursor: not-allowed; scale: 1; }
+.btn:focus-visible, .chip:focus-visible, .music:focus-visible, .env:focus-visible, textarea:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.btn-yes { background: linear-gradient(135deg, var(--rose), var(--coral)); box-shadow: 0 14px 34px -8px rgba(255,93,131,.7); overflow: hidden; font-size: 1.2rem; padding: 20px 44px; animation: beat 1.7s ease-in-out infinite; }
+.btn-yes::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.5) 50%, transparent 70%); transform: translateX(-130%); animation: shine 3.2s ease-in-out infinite; }
+.btn-yes:hover { animation-play-state: paused; box-shadow: 0 18px 44px -6px rgba(255,93,131,.9); }
+@keyframes beat { 0%, 100% { transform: scale(1); } 14% { transform: scale(1.06); } 28% { transform: scale(1); } 42% { transform: scale(1.04); } }
+@keyframes shine { 0%, 55% { transform: translateX(-130%); } 100% { transform: translateX(130%); } }
+.btn-soft { background: rgba(255, 201, 212, .16); border: 1px solid var(--panel-line); }
+.btn-soft:hover { background: rgba(255, 201, 212, .26); }
+.btn-ghost { background: transparent; border: 1px solid var(--panel-line); color: var(--ink-soft); }
+.btn-ghost:hover { border-color: var(--blush); color: var(--ink); }
+.btn-maybe { background: rgba(255, 208, 138, .14); border: 1px solid rgba(255, 208, 138, .45); color: var(--gold); }
+.btn-maybe:hover { background: rgba(255, 208, 138, .24); }
+.row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%; }
+.choices { display: grid; gap: 16px; justify-items: center; width: 100%; }
+
+.music { position: fixed; z-index: 30; top: calc(14px + env(safe-area-inset-top, 0px)); right: max(14px, env(safe-area-inset-right, 0px)); width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--panel-line); background: var(--panel); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--blush); cursor: pointer; display: grid; place-items: center; }
+.bars { display: flex; align-items: flex-end; gap: 3px; height: 16px; }
+.bars i { width: 3px; height: 4px; border-radius: 2px; background: currentColor; }
+.music.on .bars i { animation: eq 1s ease-in-out infinite; }
+.music.on .bars i:nth-child(2) { animation-delay: -.3s; }
+.music.on .bars i:nth-child(3) { animation-delay: -.6s; }
+.music.on .bars i:nth-child(4) { animation-delay: -.15s; }
+@keyframes eq { 0%, 100% { height: 4px; } 50% { height: 16px; } }
+
+/* amplop */
+.env-wrap { perspective: 900px; padding-top: 70px; }
+.env { position: relative; display: block; width: min(300px, 78vw); aspect-ratio: 3 / 2; padding: 0; border: 0; background: none; cursor: pointer; animation: floaty 4s ease-in-out infinite; filter: drop-shadow(0 24px 30px rgba(0,0,0,.45)); -webkit-tap-highlight-color: transparent; }
+@keyframes floaty { 50% { transform: translateY(-10px) rotate(-1deg); } }
+.env-back { position: absolute; inset: 0; border-radius: 10px; background: #8a2c52; }
+.letter { position: absolute; left: 7%; right: 7%; top: 6%; height: 84%; z-index: 1; display: grid; place-content: center; gap: 2px; text-align: center; border-radius: 8px; background: #fff1ea; color: #5a1f3c; box-shadow: 0 6px 18px rgba(0,0,0,.25); transition: transform 1s cubic-bezier(.3,.8,.3,1) .35s; }
+.letter .hand { color: #b23a63; font-size: 2.1rem; }
+.letter small { font: 500 .8rem var(--font-body); letter-spacing: .16em; text-transform: uppercase; }
+.pocket { position: absolute; inset: 0; z-index: 2; border-radius: 10px; background: linear-gradient(160deg, #c24d77, #9c3660); clip-path: polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%); }
+.flap { position: absolute; left: 0; right: 0; top: 0; height: 56%; z-index: 3; transform-origin: 50% 0; background: linear-gradient(#d4638b, #bb4b74); clip-path: polygon(0 0, 100% 0, 50% 100%); transition: transform .7s cubic-bezier(.5,0,.2,1), z-index 0s .3s; }
+.seal { position: absolute; z-index: 4; left: 50%; top: 56%; translate: -50% -50%; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: radial-gradient(circle at 35% 30%, #ff8aa6, #d2305b); box-shadow: 0 4px 12px rgba(0,0,0,.35); animation: beat 1.7s ease-in-out infinite; transition: opacity .4s; }
+.env.open { animation: none; }
+.env.open .flap { transform: rotateX(180deg); z-index: 0; }
+.env.open .letter { transform: translateY(-62%); }
+.env.open .seal { opacity: 0; animation: none; }
+
+/* kartu alasan */
+.rcard { text-align: left; display: grid; gap: 10px; min-height: 220px; align-content: center; }
+.rcard.swap { animation: cardIn .6s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes cardIn { from { opacity: 0; transform: translateX(var(--dx, 30px)) rotate(var(--rot, 2deg)); } }
+.rcard .ico { color: var(--rose); display: inline-flex; animation: beat 1.7s ease-in-out infinite; width: fit-content; }
+.rcard h2 { margin: 0; font: italic 700 clamp(1.8rem, 6vw, 2.3rem)/1.1 var(--font-display); }
+.rcard p { margin: 0; color: var(--ink-soft); font-size: 1.05rem; }
+.dots { display: flex; gap: 8px; align-items: center; }
+.dots span { width: 8px; height: 8px; border-radius: 8px; background: var(--panel-line); transition: width .4s, background .4s; }
+.dots span.on { width: 24px; background: var(--rose); }
+
+/* tahap tolak */
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.chip { font: 500 .92rem/1.2 var(--font-body); color: var(--ink); background: transparent; border: 1px solid var(--panel-line); border-radius: 999px; padding: 11px 16px; min-height: 44px; cursor: pointer; transition: background .25s, border-color .25s, scale .25s; }
+.chip:hover { border-color: var(--blush); }
+.chip[aria-pressed="true"] { background: rgba(255, 93, 131, .28); border-color: var(--rose); }
+textarea { width: 100%; min-height: 120px; resize: vertical; padding: 16px; font: 400 1rem/1.5 var(--font-body); color: var(--ink); background: rgba(0,0,0,.22); border: 1px solid var(--panel-line); border-radius: 18px; }
+textarea::placeholder { color: rgba(233, 196, 205, .6); }
+.count { margin: 0; text-align: right; width: 100%; font-size: .8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.quote { width: 100%; text-align: left; margin: 0; padding: 16px 18px; border-left: 3px solid var(--blush); background: rgba(0,0,0,.2); border-radius: 0 16px 16px 0; color: var(--ink-soft); overflow-wrap: anywhere; }
+.quote b { display: block; font: 500 .72rem var(--font-body); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+
+/* tahap terima */
+.bigheart { color: var(--rose); width: 96px; height: 96px; animation: beat 1.2s ease-in-out infinite; filter: drop-shadow(0 0 22px rgba(255,93,131,.8)); }
+.stats { display: grid; gap: 10px; justify-items: center; }
+.stats p { margin: 0; }
+.timer { font: italic 700 2.2rem/1.1 var(--font-display); font-variant-numeric: tabular-nums; color: var(--gold); }
+.since { color: var(--ink-soft); font-size: .92rem; }
+.meter { width: 100%; display: grid; gap: 8px; margin-top: 8px; font-size: .9rem; color: var(--ink-soft); }
+.meter .bar { height: 14px; border-radius: 999px; background: rgba(0,0,0,.28); overflow: hidden; }
+.meter .bar i { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--rose), var(--gold)); transition: width 2.4s cubic-bezier(.3,.7,.2,1); }
+.meter b { font-variant-numeric: tabular-nums; color: var(--ink); }
+
+#waitInfo { display: none; }
+#waitInfo.show { display: grid; }
+
+.toast { position: fixed; z-index: 40; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); translate: -50% 20px; opacity: 0; pointer-events: none; max-width: calc(100vw - 32px); padding: 12px 20px; border-radius: 999px; background: rgba(20, 6, 18, .92); border: 1px solid var(--panel-line); color: var(--ink); font-size: .92rem; transition: opacity .35s, translate .35s; text-align: center; }
+.toast.show { opacity: 1; translate: -50% 0; }
+.fallback { position: fixed; z-index: 35; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(76px + env(safe-area-inset-bottom, 0px)); min-height: 80px; }
+
+
+/* Kotak kejutan 3D */
+.gift3d{position:relative;width:190px;height:170px;border:0;background:transparent;cursor:pointer;perspective:700px;filter:drop-shadow(0 22px 22px rgba(0,0,0,.35));animation:floaty 3.5s ease-in-out infinite}
+.gift-body{position:absolute;left:25px;right:25px;bottom:10px;height:105px;border-radius:8px 8px 14px 14px;background:linear-gradient(135deg,#ff8aa6,#b72f68);box-shadow:inset -12px 0 20px rgba(70,0,30,.2)}
+.gift-lid{position:absolute;z-index:3;left:17px;right:17px;top:35px;height:34px;border-radius:8px;background:linear-gradient(135deg,#ffd08a,#d88a43);transform-origin:10% 90%;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.gift-ribbon-v{position:absolute;z-index:4;left:85px;bottom:10px;width:20px;height:105px;background:linear-gradient(90deg,#ffe3a7,#fff2d1,#e9a85c)}
+.gift-ribbon-h{position:absolute;z-index:4;left:25px;right:25px;bottom:56px;height:17px;background:#ffe3a7}
+.gift-bow{position:absolute;z-index:5;top:7px;left:78px;width:35px;height:35px;border-radius:50%;display:grid;place-items:center;color:#7b2447;background:#ffe3a7;font-size:23px}
+.gift3d.opened .gift-lid{transform:translateY(-48px) rotate(-24deg)}
+.gift3d.opened{animation:none}
+
+@media (max-width: 420px) {
+  .btn-yes { padding: 18px 36px; }
+  .typed { font-size: 1.15rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
+}
+</style>
+
+<div class="backdrop" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i></div>
+<canvas id="bg" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<button id="music" class="music" type="button" aria-pressed="false" aria-label="Putar musik"><span class="bars"><i></i><i></i><i></i><i></i></span></button>
+
+<main class="app">
+
+  <!-- 1. Amplop -->
+  <section class="screen" id="s-intro" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0" id="today">Sebuah surat</p>
+      <h1 class="display rise" style="--i:1">Untuk Nala</h1>
+      <div class="rise env-wrap" style="--i:2">
+        <button class="env" id="env" type="button" aria-label="Buka surat untuk Nala">
+          <span class="env-back"></span>
+          <span class="letter"><span class="hand">Untuk Nala</span><small>dari Yoga</small></span>
+          <span class="pocket"></span>
+          <span class="flap"></span>
+          <span class="seal"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+        </button>
+      </div>
+      <p class="hand rise" style="--i:3" id="envHint">ketuk amplopnya</p>
+    </div>
+  </section>
+
+  <!-- 2. Pesan -->
+  <section class="screen" id="s-hello" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Sebuah pesan</p>
+      <div class="panel msg rise" style="--i:1">
+        <div id="typed" class="typed"></div>
+        <p class="hand sign">— Yoga</p>
+      </div>
+      <div class="row rise" style="--i:2"><button class="btn btn-soft" id="helloBtn" type="button">Lewati</button></div>
+    </div>
+  </section>
+
+  <!-- 3. Alasan -->
+  <section class="screen" id="s-reasons" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Sebagian yang aku simpan</p>
+      <div class="panel rcard rise" style="--i:1" id="rcard" aria-live="polite">
+        <span class="ico"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+        <h2 id="rt"></h2>
+        <p id="rd"></p>
+      </div>
+      <div class="dots rise" style="--i:2" id="dots" aria-hidden="true"></div>
+      <div class="row rise" style="--i:3">
+        <button class="btn btn-ghost" id="rprev" type="button">Sebelumnya</button>
+        <button class="btn btn-soft" id="rnext" type="button">Berikutnya</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Kotak kejutan -->
+  <section class="screen" id="s-gift" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Satu kejutan kecil</p>
+      <h2 class="display rise" style="--i:1">Ada sesuatu untukmu</h2>
+      <p class="note rise" style="--i:2">Ketuk kotaknya. Tidak ada hadiah mahal, hanya pesan yang tulus.</p>
+      <button class="gift3d rise" id="giftOpen" type="button" aria-label="Buka kotak kejutan">
+        <span class="gift-lid"></span><span class="gift-body"></span><span class="gift-ribbon-v"></span><span class="gift-ribbon-h"></span><span class="gift-bow">✦</span>
+      </button>
+      <p class="hand" id="giftMessage" hidden>Hal sederhana bisa jadi istimewa saat diberikan dengan tulus. ✨</p>
+      <button class="btn btn-soft" id="giftContinue" type="button" hidden>Lanjut ke pertanyaan</button>
+    </div>
+  </section>
+
+  <!-- 4. Pertanyaan -->
+  <section class="screen" id="s-ask" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Satu pertanyaan</p>
+      <h2 class="display big" id="askTitle" aria-label="Nala, maukah kamu jadi pacarku?"></h2>
+      <p class="hand rise" style="--i:5">— Yoga</p>
+      <div class="choices rise" style="--i:6">
+        <button class="btn btn-yes" id="yes" type="button">Terima</button>
+        <div class="row">
+          <button class="btn btn-maybe" id="maybe" type="button">Mungkin akan kupikirkan kembali</button>
+          <button class="btn btn-ghost" id="no" type="button">Tolak</button>
+        </div>
+      </div>
+      <p class="note rise" style="--i:7">Jawab sesuai kata hatimu. Aku siap menerima jawaban apa pun.</p>
+    </div>
+  </section>
+
+  <!-- 5a. Terima -->
+  <section class="screen" id="s-yes" data-mood="love" data-bg="hearts">
+    <div class="inner">
+      <svg class="bigheart rise" style="--i:0" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <h2 class="display big rise" style="--i:1">Yeay! Terima kasih, Nala.</h2>
+      <div class="panel msg rise" style="--i:2">
+        <div id="yesTyped" class="typed" style="min-height:9em"></div>
+        <p class="hand sign">— Yoga</p>
+      </div>
+      <div class="panel stats rise" style="--i:3">
+        <p class="eyebrow">Kita resmi sejak</p>
+        <p class="since" id="since"></p>
+        <p class="timer" id="timer">0 hari 00:00:00</p>
+        <div class="meter">
+          <span>Kadar bahagia Yoga</span>
+          <div class="bar"><i id="meterFill"></i></div>
+          <b id="meterVal">0%</b>
+        </div>
+      </div>
+      <p class="note rise" style="--i:4">Kirim jawabanmu langsung melalui WhatsApp. Pesan akan disiapkan otomatis.</p>
+      <div class="row rise" style="--i:5">
+        <button class="btn btn-yes" id="copyYes" type="button" style="font-size:1rem;padding:16px 28px">Kirim jawaban via WhatsApp</button>
+        <button class="btn btn-ghost" id="restart1" type="button">Ulangi dari awal</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5b. Tolak: alasan -->
+  <section class="screen" id="s-no" data-mood="calm" data-bg="petals">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Tidak apa-apa</p>
+      <h2 class="display rise" style="--i:1">Boleh aku tahu alasannya?</h2>
+      <p class="note rise" style="--i:2">Jujur saja. Aku akan membacanya dengan hati terbuka.</p>
+      <div class="chips rise" style="--i:3" id="chips"></div>
+      <div class="rise" style="--i:4">
+        <textarea id="reasonText" maxlength="300" placeholder="Atau tulis dengan kata-katamu sendiri..." aria-label="Alasan"></textarea>
+        <p class="count"><span id="cnt">0</span>/300</p>
+      </div>
+      <div class="row rise" style="--i:5">
+        <button class="btn btn-ghost" id="noBack" type="button">Kembali</button>
+        <button class="btn btn-soft" id="noSend" type="button" disabled>Kirim alasan</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5c. Tolak: maaf -->
+  <section class="screen" id="s-sorry" data-mood="calm" data-bg="petals">
+    <div class="inner">
+      <h2 class="display rise" style="--i:0">Maaf kalau aku sudah mengganggu.</h2>
+      <blockquote class="quote rise" style="--i:1"><b>Alasanmu</b><span id="quoteText"></span></blockquote>
+      <div class="panel msg rise" style="--i:2">
+        <div id="sorryTyped" class="typed" style="min-height:10em"></div>
+        <p class="hand sign">— Yoga</p>
+      </div>
+      <div class="row rise" style="--i:3">
+        <button class="btn btn-soft" id="copyNo" type="button">Kirim alasan via WhatsApp</button>
+        <button class="btn btn-ghost" id="changeAns" type="button">Ubah jawabanku</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5d. Mungkin -->
+  <section class="screen" id="s-wait" data-mood="wait" data-bg="fireflies">
+    <div class="inner">
+      <p class="eyebrow rise" style="--i:0">Tidak perlu terburu-buru</p>
+      <h2 class="display rise" style="--i:1">Tentu. Ambil waktumu, Nala.</h2>
+      <p class="note rise" style="--i:2">Perasaan tidak harus dijawab hari ini. Kira-kira kapan kamu bisa memberi tahu aku?</p>
+      <div class="chips rise" style="--i:3" id="waitChips"></div>
+      <div class="panel stats rise" id="waitInfo" style="--i:4">
+        <p class="eyebrow">Aku tunggu sampai</p>
+        <p class="since" id="waitDate"></p>
+        <p class="timer" id="waitTimer">0 hari 00:00:00</p>
+        <button class="btn btn-soft" id="copyWait" type="button">Kirim pesan via WhatsApp</button>
+      </div>
+      <div class="row rise" style="--i:5">
+        <button class="btn btn-ghost" id="waitBack" type="button">Aku sudah punya jawabannya</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<textarea class="fallback" id="fallback" readonly hidden aria-label="Teks untuk disalin"></textarea>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== Isi pesan (mudah diubah) ===== */
+  var CFG = { to: 'Nala', from: 'Yoga', phone: '62881027600357' };
+  function sendWhatsApp(message) {
+    var url = 'https://wa.me/' + CFG.phone + '?text=' + encodeURIComponent(message);
+    window.open(url, '_blank', 'noopener,noreferrer');
+    toast('Pesan sudah disiapkan di WhatsApp. Tekan Kirim untuk mengirimnya.');
+  }
+  var HELLO = [
+    'Hai, Nala.',
+    'Aku Yoga. Aku tidak pandai merangkai kata, jadi aku membuat ini supaya perasaanku sampai dengan caraku sendiri.',
+    'Sejak mengenalmu, hari-hariku terasa lebih berwarna. Ada banyak hal kecil darimu yang diam-diam aku simpan.',
+    'Boleh aku tunjukkan sebagian?'
+  ];
+  var REASONS = [
+    { t: 'Senyummu', d: 'Sederhana, tapi bisa membuat hariku terasa lebih ringan.' },
+    { t: 'Caramu bicara', d: 'Enak didengar, dan aku selalu ingin mendengar lebih lama.' },
+    { t: 'Kamu apa adanya', d: 'Tidak perlu berpura-pura di dekatmu. Itu yang membuatku nyaman.' },
+    { t: 'Tawamu', d: 'Menular. Aku sering ikut tersenyum sendiri setelahnya.' },
+    { t: 'Dan masih banyak lagi', d: 'Terlalu banyak untuk ditulis di sini, jadi aku ceritakan langsung nanti.' }
+  ];
+  var YES_TEXT = [
+    'Aku tidak tahu harus bilang apa selain terima kasih.',
+    'Kamu baru saja membuat hari ini jadi hari terbaikku.',
+    'Aku janji akan berusaha jadi seseorang yang bisa kamu andalkan, dan membuatmu tersenyum sebanyak yang aku bisa.'
+  ];
+  var SORRY_TEXT = [
+    'Terima kasih sudah jujur, Nala, dan sudah membaca sampai sini.',
+    'Maaf kalau perasaanku membuatmu tidak nyaman. Itu bukan niatku.',
+    'Aku menghargai jawabanmu sepenuhnya, dan kamu tidak perlu merasa bersalah. Semoga harimu selalu penuh hal baik.'
+  ];
+  var NO_CHIPS = [
+    'Aku belum siap berpacaran',
+    'Aku belum punya perasaan itu',
+    'Aku sedang fokus ke hal lain',
+    'Aku lebih nyaman berteman',
+    'Aku sudah ada yang lain'
+  ];
+  var WAIT_CHIPS = [
+    { l: 'Besok', n: 1 }, { l: '3 hari lagi', n: 3 }, { l: 'Seminggu', n: 7 }, { l: 'Dua minggu', n: 14 }
+  ];
+
+  /* ===== Util ===== */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+  var rand = function (a, b) { return a + Math.random() * (b - a); };
+  var pick = function (arr) { return arr[Math.floor(Math.random() * arr.length)]; };
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var dtf = new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  var dfOnly = new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  function span(ms) {
+    var s = Math.max(0, Math.floor(ms / 1000));
+    var d = Math.floor(s / 86400); s -= d * 86400;
+    var h = Math.floor(s / 3600); s -= h * 3600;
+    var m = Math.floor(s / 60); s -= m * 60;
+    return d + ' hari ' + pad(h) + ':' + pad(m) + ':' + pad(s);
+  }
+  function centerOf(el) { var r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
+
+  /* ===== Kanvas ===== */
+  var bg = $('#bg'), fx = $('#fx');
+  var bctx = bg.getContext('2d'), fctx = fx.getContext('2d');
+  var W = 0, H = 0, DPR = 1;
+  var COLORS = ['#ff5d83', '#ffc9d4', '#ff8a6b', '#c9a6ff', '#ffd08a'];
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    [bg, fx].forEach(function (c) { c.width = Math.round(W * DPR); c.height = Math.round(H * DPR); });
+    bctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    fctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    makeBg();
+  }
+  function heart(ctx, s) {
+    ctx.beginPath();
+    ctx.moveTo(0, -s * 0.15);
+    ctx.bezierCurveTo(0, -s * 0.5, -s * 0.5, -s * 0.5, -s * 0.5, -s * 0.2);
+    ctx.bezierCurveTo(-s * 0.5, s * 0.12, 0, s * 0.28, 0, s * 0.5);
+    ctx.bezierCurveTo(0, s * 0.28, s * 0.5, s * 0.12, s * 0.5, -s * 0.2);
+    ctx.bezierCurveTo(s * 0.5, -s * 0.5, 0, -s * 0.5, 0, -s * 0.15);
+    ctx.closePath();
+  }
+
+  /* partikel latar */
+  var mode = 'hearts', bgp = [];
+  function spawnBg(init) {
+    var p = { x: rand(0, W), y: init ? rand(0, H) : H + 40, s: rand(9, 28), vy: rand(0.25, 0.8), ph: rand(0, 6.28), sw: rand(10, 36), a: rand(0.1, 0.34), rot: rand(-0.5, 0.5), col: pick(COLORS), ang: rand(0, 6.28) };
+    if (mode === 'petals') { p.y = init ? rand(0, H) : -30; p.vy = rand(0.5, 1.2); p.col = pick(['#ffc9d4', '#ff9db5', '#ffd9e0', '#e9b4ff']); p.a = rand(0.25, 0.55); }
+    if (mode === 'fireflies') { p.y = rand(0, H); p.s = rand(2, 4.5); p.col = pick(['#ffd08a', '#ffe9b8', '#ffb36b']); }
+    return p;
+  }
+  function makeBg() {
+    bgp = [];
+    var n = reduce ? 10 : (W < 600 ? 20 : 34);
+    for (var i = 0; i < n; i++) bgp.push(spawnBg(true));
+  }
+  function setMode(m) { if (m !== mode) { mode = m; makeBg(); } }
+
+  function drawBg(t) {
+    bctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < bgp.length; i++) {
+      var p = bgp[i];
+      if (!reduce) {
+        if (mode === 'hearts') { p.y -= p.vy; if (p.y < -40) bgp[i] = p = spawnBg(false); }
+        else if (mode === 'petals') { p.y += p.vy; p.rot += 0.012; if (p.y > H + 40) bgp[i] = p = spawnBg(false); }
+        else { p.ang += rand(-0.08, 0.08); p.x += Math.cos(p.ang) * 0.35; p.y += Math.sin(p.ang) * 0.35; if (p.x < -10) p.x = W + 10; if (p.x > W + 10) p.x = -10; if (p.y < -10) p.y = H + 10; if (p.y > H + 10) p.y = -10; }
+      }
+      var x = p.x + (mode === 'fireflies' ? 0 : Math.sin(t * 0.001 + p.ph) * p.sw);
+      bctx.save();
+      bctx.translate(x, p.y);
+      if (mode === 'hearts') {
+        bctx.rotate(p.rot + Math.sin(t * 0.0008 + p.ph) * 0.2);
+        bctx.globalAlpha = p.a; bctx.fillStyle = p.col; heart(bctx, p.s); bctx.fill();
+      } else if (mode === 'petals') {
+        bctx.rotate(p.rot); bctx.globalAlpha = p.a; bctx.fillStyle = p.col;
+        bctx.beginPath(); bctx.ellipse(0, 0, p.s * 0.32, p.s * 0.6, 0, 0, 6.2832); bctx.fill();
+      } else {
+        var pulse = 0.5 + 0.5 * Math.sin(t * 0.002 + p.ph);
+        bctx.fillStyle = p.col;
+        bctx.globalAlpha = 0.12 * pulse; bctx.beginPath(); bctx.arc(0, 0, p.s * 5, 0, 6.2832); bctx.fill();
+        bctx.globalAlpha = 0.5 + 0.5 * pulse; bctx.beginPath(); bctx.arc(0, 0, p.s * 0.7, 0, 6.2832); bctx.fill();
+      }
+      bctx.restore();
+    }
+  }
+
+  /* partikel efek */
+  var fxp = [];
+  function push(p) { if (fxp.length < 700) fxp.push(p); }
+  function addConfetti(x, y, n, spread, up) {
+    n = reduce ? Math.ceil(n / 3) : n;
+    for (var i = 0; i < n; i++) {
+      var a = rand(0, 6.2832), v = rand(2, spread || 9);
+      push({ t: 'conf', x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - (up || 3), g: 0.14, drag: 0.985, life: rand(110, 190), max: 190, s: rand(5, 10), rot: rand(0, 6.28), vr: rand(-0.3, 0.3), col: pick(COLORS) });
+    }
+  }
+  function addRain(n) {
+    n = reduce ? 2 : n;
+    for (var i = 0; i < n; i++) {
+      push({ t: 'conf', x: rand(0, W), y: -12, vx: rand(-1, 1), vy: rand(2, 4.5), g: 0.03, drag: 0.995, life: 320, max: 320, s: rand(6, 11), rot: rand(0, 6.28), vr: rand(-0.2, 0.2), col: pick(COLORS) });
+    }
+  }
+  function addHearts(x, y, n) {
+    n = reduce ? Math.ceil(n / 2) : n;
+    for (var i = 0; i < n; i++) {
+      push({ t: 'heart', x: x + rand(-8, 8), y: y, vx: rand(-1.6, 1.6), vy: rand(-3.6, -1.4), g: -0.012, drag: 0.99, life: rand(70, 120), max: 120, s: rand(10, 22), rot: rand(-0.5, 0.5), vr: rand(-0.04, 0.04), col: pick(COLORS) });
+    }
+  }
+  function addSparks(x, y, n) {
+    n = reduce ? 3 : n;
+    for (var i = 0; i < n; i++) {
+      var a = rand(0, 6.2832), v = rand(1, 4);
+      push({ t: 'spark', x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: 0.03, drag: 0.96, life: rand(25, 50), max: 50, s: rand(1.5, 3), col: pick(['#ffd08a', '#fff1ee', '#ffc9d4']) });
+    }
+  }
+  function firework(x, y) {
+    var col = pick(COLORS), n = reduce ? 14 : 46;
+    for (var i = 0; i < n; i++) {
+      var a = (i / n) * 6.2832, v = rand(2.5, 5.5);
+      push({ t: 'spark', x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: 0.05, drag: 0.965, life: rand(45, 75), max: 75, s: rand(2, 3.2), col: i % 3 ? col : '#fff1ee', trail: true });
+    }
+    addHearts(x, y, 4);
+  }
+  function drawFx() {
+    fctx.clearRect(0, 0, W, H);
+    for (var i = fxp.length - 1; i >= 0; i--) {
+      var p = fxp[i];
+      p.vx *= p.drag; p.vy = p.vy * p.drag + p.g; p.x += p.vx; p.y += p.vy; p.life--;
+      if (p.rot !== undefined) p.rot += p.vr || 0;
+      if (p.life <= 0 || p.y > H + 40 || p.y < -80) { fxp.splice(i, 1); continue; }
+      var a = Math.min(1, p.life / (p.max * 0.4));
+      fctx.save(); fctx.globalAlpha = a; fctx.translate(p.x, p.y);
+      if (p.t === 'conf') {
+        fctx.rotate(p.rot); fctx.scale(1, Math.cos(p.rot * 2)); fctx.fillStyle = p.col; fctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+      } else if (p.t === 'heart') {
+        fctx.rotate(p.rot); fctx.fillStyle = p.col; heart(fctx, p.s); fctx.fill();
+      } else {
+        fctx.fillStyle = p.col;
+        if (p.trail) { fctx.strokeStyle = p.col; fctx.lineWidth = p.s * 0.8; fctx.beginPath(); fctx.moveTo(0, 0); fctx.lineTo(-p.vx * 2.2, -p.vy * 2.2); fctx.stroke(); }
+        fctx.beginPath(); fctx.arc(0, 0, p.s, 0, 6.2832); fctx.fill();
+      }
+      fctx.restore();
+    }
+  }
+  function frame(t) {
+    if (!document.hidden) { drawBg(t); drawFx(); }
+    requestAnimationFrame(frame);
+  }
+
+  /* ===== Musik (kotak musik sintetis) ===== */
+  var actx = null, musicOn = false, mTimer = null, mStep = 0, mNext = 0;
+  var SCALE = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25];
+  var MELODY = [4, 2, 0, 2, 5, 4, 2, 1, 0, 2, 4, 5, 7, 5, 4, 2, 3, 2, 0, 1, 2, 4, 2, 0];
+  function note(f, t, g) {
+    var o = actx.createOscillator(), o2 = actx.createOscillator(), gn = actx.createGain();
+    o.type = 'sine'; o.frequency.value = f; o2.type = 'triangle'; o2.frequency.value = f * 2;
+    var g2 = actx.createGain(); g2.gain.value = 0.25;
+    o.connect(gn); o2.connect(g2); g2.connect(gn); gn.connect(actx.destination);
+    gn.gain.setValueAtTime(0.0001, t);
+    gn.gain.linearRampToValueAtTime(g, t + 0.01);
+    gn.gain.exponentialRampToValueAtTime(0.0001, t + 1.5);
+    o.start(t); o2.start(t); o.stop(t + 1.6); o2.stop(t + 1.6);
+  }
+  function startMusic() {
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.resume) actx.resume();
+      musicOn = true; mNext = actx.currentTime + 0.05;
+      clearInterval(mTimer);
+      mTimer = setInterval(function () {
+        while (mNext < actx.currentTime + 0.7) {
+          note(SCALE[MELODY[mStep % MELODY.length]], mNext, 0.05);
+          if (mStep % 8 === 0) note(130.81, mNext, 0.045);
+          mStep++; mNext += 0.5;
+        }
+      }, 200);
+    } catch (e) { musicOn = false; }
+    syncMusicBtn();
+  }
+  function stopMusic() { musicOn = false; clearInterval(mTimer); syncMusicBtn(); }
+  function syncMusicBtn() {
+    var b = $('#music'); b.classList.toggle('on', musicOn);
+    b.setAttribute('aria-pressed', String(musicOn));
+    b.setAttribute('aria-label', musicOn ? 'Matikan musik' : 'Putar musik');
+  }
+  function chime(freqs) {
+    if (!actx || !musicOn) return;
+    var t = actx.currentTime + 0.02;
+    freqs.forEach(function (f, i) { note(f, t + i * 0.12, 0.07); });
+  }
+  $('#music').addEventListener('click', function () { musicOn ? stopMusic() : startMusic(); });
+  document.addEventListener('visibilitychange', function () {
+    if (!actx) return;
+    try { if (document.hidden) actx.suspend(); else if (musicOn) actx.resume(); } catch (e) {}
+  });
+
+  /* ===== Toast & salin ===== */
+  var toastT = null;
+  function toast(msg) {
+    var el = $('#toast'); el.textContent = msg; el.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove('show'); }, 2600);
+  }
+  function copyText(text) {
+    var done = function () { toast('Tersalin. Kirim ke Yoga ya.'); };
+    var fail = function () {
+      var box = $('#fallback'); box.value = text; box.hidden = false; box.focus(); box.select();
+      toast('Tekan lama pada teks yang tersorot, lalu salin.');
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fail);
+      else fail();
+    } catch (e) { fail(); }
+  }
+  $('#fallback').addEventListener('blur', function () { this.hidden = true; });
+
+  /* ===== Efek mengetik ===== */
+  var activeTyper = null;
+  function typer(box, paras, speed) {
+    var st = { skip: false, stop: false, finished: false };
+    box.textContent = '';
+    var ps = paras.map(function () { var p = document.createElement('p'); box.appendChild(p); return p; });
+    var caret = document.createElement('span'); caret.className = 'caret';
+    function finish() { ps.forEach(function (p, i) { p.textContent = paras[i]; }); st.finished = true; }
+    st.done = (async function () {
+      for (var i = 0; i < paras.length; i++) {
+        var t = paras[i], tn = document.createTextNode('');
+        ps[i].textContent = ''; ps[i].appendChild(tn); ps[i].appendChild(caret);
+        for (var k = 1; k <= t.length; k++) {
+          if (st.stop) return;
+          if (st.skip) { finish(); return; }
+          tn.data = t.slice(0, k);
+          var ch = t.charAt(k - 1);
+          await sleep(speed + (',.?!'.indexOf(ch) > -1 ? 140 : 0));
+        }
+        await sleep(260);
+      }
+      caret.remove(); st.finished = true;
+    })();
+    return st;
+  }
+
+  /* ===== Navigasi layar ===== */
+  var cur = null, timers = [];
+  var hooks = {};
+  function clearTimers() {
+    timers.forEach(function (t) { clearInterval(t); clearTimeout(t); });
+    timers = [];
+    if (activeTyper) activeTyper.stop = true;
+  }
+  function go(id) {
+    var next = $('#s-' + id);
+    if (!next || next === cur) return;
+    clearTimers();
+    if (cur) cur.classList.remove('active');
+    next.classList.add('active'); next.scrollTop = 0; cur = next;
+    document.body.setAttribute('data-mood', next.getAttribute('data-mood') || 'love');
+    setMode(next.getAttribute('data-bg') || 'hearts');
+    if (hooks[id]) hooks[id]();
+  }
+
+  /* ===== Tahap 1: amplop ===== */
+  var opening = false;
+  $('#env').addEventListener('click', async function () {
+    if (opening) return; opening = true;
+    this.classList.add('open'); $('#envHint').textContent = 'sebentar ya...';
+    startMusic(); chime([659, 784, 988]);
+    var c = centerOf(this); addHearts(c.x, c.y - 40, 10); addSparks(c.x, c.y - 60, 18);
+    await sleep(1900);
+    go('hello'); opening = false;
+  });
+  $('#today').textContent = 'Ditulis ' + dfOnly.format(new Date());
+
+  /* ===== Tahap 2: pesan ===== */
+  hooks.hello = function () {
+    var t = activeTyper = typer($('#typed'), HELLO, 26);
+    var b = $('#helloBtn'); b.textContent = 'Lewati';
+    t.done.then(function () { if (!t.stop) b.textContent = 'Tunjukkan'; });
+  };
+  $('#helloBtn').addEventListener('click', function () {
+    if (activeTyper && !activeTyper.finished) activeTyper.skip = true;
+    else go('reasons');
+  });
+
+  /* ===== Tahap 3: alasan ===== */
+  var ri = 0, dotsBox = $('#dots');
+  REASONS.forEach(function () { dotsBox.appendChild(document.createElement('span')); });
+  function renderReason(dir) {
+    var r = REASONS[ri], card = $('#rcard');
+    $('#rt').textContent = r.t; $('#rd').textContent = r.d;
+    card.style.setProperty('--dx', (dir >= 0 ? 36 : -36) + 'px');
+    card.style.setProperty('--rot', (dir >= 0 ? 2 : -2) + 'deg');
+    card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
+    $$('span', dotsBox).forEach(function (d, i) { d.classList.toggle('on', i === ri); });
+    $('#rprev').style.visibility = ri === 0 ? 'hidden' : 'visible';
+    $('#rnext').textContent = ri === REASONS.length - 1 ? 'Ke pertanyaanku' : 'Berikutnya';
+    var c = centerOf(card); addHearts(c.x, c.y, 5);
+  }
+  hooks.reasons = function () { ri = 0; renderReason(1); };
+  $('#rprev').addEventListener('click', function () { if (ri > 0) { ri--; renderReason(-1); } });
+  $('#rnext').addEventListener('click', function () {
+    if (ri < REASONS.length - 1) { ri++; renderReason(1); } else go('gift');
+  });
+
+  $('#giftOpen').addEventListener('click', function () {
+    this.classList.add('opened');
+    $('#giftMessage').hidden = false;
+    $('#giftContinue').hidden = false;
+    addConfetti(W * .5, H * .42, 34, 8, 3);
+    addHearts(W * .5, H * .35, 12);
+  });
+  $('#giftContinue').addEventListener('click', function () { go('ask'); });
+
+  /* ===== Tahap 4: pertanyaan ===== */
+  (function () {
+    var box = $('#askTitle');
+    (CFG.to + ', maukah kamu jadi pacarku?').split(' ').forEach(function (w, i, a) {
+      var s = document.createElement('span'); s.className = 'w'; s.style.setProperty('--w', i); s.textContent = w;
+      box.appendChild(s); if (i < a.length - 1) box.appendChild(document.createTextNode(' '));
+    });
+  })();
+  hooks.ask = function () {
+    timers.push(setInterval(function () {
+      var y = $('#yes'); if (!y) return; var c = centerOf(y);
+      addSparks(c.x + rand(-70, 70), c.y + rand(-26, 26), 2);
+    }, 700));
+  };
+  $('#yes').addEventListener('click', function () {
+    var c = centerOf(this); addConfetti(c.x, c.y, 60, 11, 4); addHearts(c.x, c.y, 14); chime([523, 659, 784, 1047, 1319]);
+    setTimeout(function () { go('yes'); }, 650);
+  });
+  $('#no').addEventListener('click', function () { go('no'); });
+  $('#maybe').addEventListener('click', function () { go('wait'); });
+
+  /* ===== 5a: terima ===== */
+  var acceptedAt = null;
+  hooks.yes = function () {
+    acceptedAt = new Date();
+    $('#since').textContent = dtf.format(acceptedAt);
+    activeTyper = typer($('#yesTyped'), YES_TEXT, 24);
+    var tm = $('#timer');
+    var tick = function () { tm.textContent = span(Date.now() - acceptedAt.getTime()); };
+    tick(); timers.push(setInterval(tick, 1000));
+    var fill = $('#meterFill'), val = $('#meterVal');
+    fill.style.transition = 'none'; fill.style.width = '0'; void fill.offsetWidth; fill.style.transition = '';
+    val.textContent = '0%';
+    timers.push(setTimeout(function () {
+      fill.style.width = '100%';
+      var t0 = performance.now();
+      var iv = setInterval(function () {
+        var k = Math.min(1, (performance.now() - t0) / 2400);
+        val.textContent = Math.round(k * 100) + '%' + (k >= 1 ? ' dan masih naik' : '');
+        if (k >= 1) clearInterval(iv);
+      }, 40);
+      timers.push(iv);
+    }, 600));
+    var n = 0;
+    addRain(40);
+    timers.push(setInterval(function () { if (n++ < 30) addRain(5); }, 120));
+    timers.push(setInterval(function () { firework(rand(W * 0.15, W * 0.85), rand(H * 0.12, H * 0.5)); }, 1100));
+    timers.push(setTimeout(function () { firework(W * 0.5, H * 0.25); }, 250));
+  };
+  $('#copyYes').addEventListener('click', function () {
+    sendWhatsApp('Halo Yoga! Aku, Nala, menerima perasaanmu. Terima kasih sudah membuat halaman ini untukku. (' + dtf.format(acceptedAt || new Date()) + ')');
+  });
+  $('#restart1').addEventListener('click', restart);
+
+  /* ===== 5b: tolak ===== */
+  var chosen = [], reasonText = '';
+  var chipBox = $('#chips'), ta = $('#reasonText'), sendBtn = $('#noSend');
+  NO_CHIPS.forEach(function (label) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = label; b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', function () {
+      var i = chosen.indexOf(label);
+      if (i > -1) chosen.splice(i, 1); else chosen.push(label);
+      b.setAttribute('aria-pressed', String(i === -1)); updateSend();
+    });
+    chipBox.appendChild(b);
+  });
+  function updateSend() { $('#cnt').textContent = ta.value.length; sendBtn.disabled = !(chosen.length || ta.value.trim()); }
+  ta.addEventListener('input', updateSend);
+  hooks.no = function () { updateSend(); };
+  $('#noBack').addEventListener('click', function () { go('ask'); });
+  sendBtn.addEventListener('click', function () {
+    var extra = ta.value.trim();
+    reasonText = chosen.join('; ') + (chosen.length && extra ? '. ' : '') + extra;
+    go('sorry');
+  });
+  hooks.sorry = function () {
+    $('#quoteText').textContent = reasonText;
+    activeTyper = typer($('#sorryTyped'), SORRY_TEXT, 28);
+  };
+  $('#copyNo').addEventListener('click', function () {
+    sendWhatsApp('Halo Yoga, aku Nala. Terima kasih sudah jujur. Untuk saat ini jawabanku belum bisa. Alasanku: ' + (reasonText || 'Aku belum siap menjawab lebih jauh.') + '. Semoga kamu mengerti.');
+  });
+  $('#changeAns').addEventListener('click', function () { go('ask'); });
+
+  /* ===== 5c: mungkin ===== */
+  var waitTarget = null, waitBox = $('#waitChips');
+  WAIT_CHIPS.forEach(function (c) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = c.l; b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', function () {
+      $$('.chip', waitBox).forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+      waitTarget = new Date(Date.now() + c.n * 86400000);
+      $('#waitDate').textContent = dfOnly.format(waitTarget);
+      $('#waitInfo').classList.add('show');
+      var r = b.getBoundingClientRect(); addSparks(r.left + r.width / 2, r.top + r.height / 2, 14);
+      var t = $('#waitTimer'); var tick = function () { t.textContent = span(waitTarget - Date.now()); };
+      tick(); timers.push(setInterval(tick, 1000));
+    });
+    waitBox.appendChild(b);
+  });
+  hooks.wait = function () {
+    timers.push(setInterval(function () { addSparks(rand(0, W), rand(0, H), 1); }, 900));
+  };
+  $('#copyWait').addEventListener('click', function () {
+    sendWhatsApp('Halo Yoga, aku Nala. Aku butuh waktu untuk memikirkannya. Aku akan memberi jawaban sebelum ' + dfOnly.format(waitTarget || new Date()) + '. Terima kasih sudah memberiku waktu.');
+  });
+  $('#waitBack').addEventListener('click', function () { go('ask'); });
+
+  /* ===== Ulangi ===== */
+  function restart() {
+    $('#env').classList.remove('open'); $('#envHint').textContent = 'ketuk amplopnya';
+    $('#giftOpen').classList.remove('opened'); $('#giftMessage').hidden = true; $('#giftContinue').hidden = true;
+    chosen = []; ta.value = ''; reasonText = '';
+    $$('.chip').forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
+    $('#waitInfo').classList.remove('show');
+    go('intro');
+  }
+
+  /* ===== Efek pointer ===== */
+  var lastTrail = 0;
+  document.addEventListener('pointermove', function (e) {
+    if (reduce || e.pointerType === 'touch') return;
+    var now = performance.now(); if (now - lastTrail < 55) return; lastTrail = now;
+    addSparks(e.clientX, e.clientY, 2);
+  });
+  document.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('button, textarea, input')) return;
+    addHearts(e.clientX, e.clientY, 5); addSparks(e.clientX, e.clientY, 6);
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('.btn, .chip'); if (!b) return;
+    var c = centerOf(b); addSparks(c.x, c.y, 10);
+  });
+  $('#yes').addEventListener('pointerenter', function () { var c = centerOf(this); addHearts(c.x, c.y - 10, 4); });
+
+  /* ===== Mulai ===== */
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(frame);
+  go('intro');
+})();
+</script>
+
+</body></html>
